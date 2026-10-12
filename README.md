@@ -27,7 +27,9 @@ Bez frameworków i bez kroku budowania: wszystko edytujesz bezpośrednio w przeg
 
 API TrainingPeaks jest dostępne wyłącznie dla zatwierdzonych partnerów i nie jest udostępniane do użytku prywatnego. Dlatego wersja 1 używa ręcznego eksportu CSV (*Settings → Export Data → Workout Summary*). Plik jest przetwarzany tylko w przeglądarce użytkownika, nic nie trafia na serwer.
 
-Rozpoznawane kolumny: `WorkoutDay`, `Title`, `WorkoutType`, `TimeTotalInHours`, `TSS`, `IF`, `Energy` (kJ). Aliasy można dopisać w `assets/csv.js`.
+Druga droga to **zrzut ekranu** (PNG/JPG, także wklejany Ctrl+V) podsumowania jednego treningu. Tekst rozpoznaje Tesseract.js w przeglądarce (wczytywany z jsDelivr przy pierwszym użyciu), a odczytane wartości trafiają do formularza do sprawdzenia przed dodaniem. Logika: `assets/screenshot.js`.
+
+Rozpoznawane kolumny CSV: `WorkoutDay`, `Title`, `WorkoutType`, `TimeTotalInHours`, `TSS`, `IF`, `Energy` (kJ). Aliasy można dopisać w `assets/csv.js`.
 
 ## Jak liczony jest plan
 

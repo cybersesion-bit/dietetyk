@@ -59,6 +59,45 @@
         <button type="button" class="btn btn-ghost" id="connect-tp" disabled title="Wymaga partnerskiego dostępu do API TrainingPeaks">Połącz z TrainingPeaks (wkrótce)</button>
       </div>
       <p id="import-status" class="status" role="status"></p>
+
+      <!-- Zrzut ekranu z TP -> OCR -> formularz do sprawdzenia -->
+      <div class="shot">
+        <h3>…albo zrzut ekranu treningu</h3>
+        <p class="hint">Zrób zrzut podsumowania jednego treningu w TrainingPeaks (czas, TSS, IF, kJ/kcal) i wgraj go jako PNG/JPG lub wklej ze schowka (Ctrl+V). Tekst jest rozpoznawany w Twojej przeglądarce, obraz nigdzie nie jest wysyłany.</p>
+        <label class="dropzone" id="shot-drop">
+          <input type="file" id="shot-input" accept="image/png,image/jpeg" hidden>
+          <span>Upuść tutaj obraz, kliknij, aby wybrać, lub wklej Ctrl+V</span>
+        </label>
+        <p id="shot-status" class="status" role="status"></p>
+
+        <div class="shot-result" id="shot-result" hidden>
+          <img id="shot-preview" alt="Podgląd wgranego zrzutu ekranu">
+          <form id="shot-form" class="grid">
+            <label>Data <input type="date" name="date" required></label>
+            <label>Nazwa <input type="text" name="title" value="Trening ze zrzutu"></label>
+            <label>Typ
+              <select name="type">
+                <option value="Bike">Rower</option>
+                <option value="Run">Bieg</option>
+                <option value="Swim">Pływanie</option>
+                <option value="Strength">Siła</option>
+                <option value="Other">Inne</option>
+              </select>
+            </label>
+            <label>Czas (h:mm:ss) <input type="text" name="duration" placeholder="1:30:00" pattern="\d{1,2}:\d{2}(:\d{2})?" required></label>
+            <label>TSS <input type="number" name="tss" step="0.1" min="0"></label>
+            <label>IF <input type="number" name="ifac" step="0.01" min="0" max="1.5"></label>
+            <label>Praca (kJ) <input type="number" name="kj" min="0"></label>
+            <label>Kalorie (kcal) <input type="number" name="kcal" min="0"></label>
+            <div class="form-actions">
+              <button type="submit" class="btn">Dodaj trening</button>
+              <button type="button" class="btn btn-ghost" id="shot-cancel">Anuluj</button>
+            </div>
+          </form>
+          <details class="ocr-raw"><summary>Rozpoznany tekst</summary><pre id="shot-text"></pre></details>
+        </div>
+      </div>
+
       <div class="table-scroll">
         <table id="workouts-table" hidden>
           <thead>
@@ -101,5 +140,6 @@
   <script src="assets/csv.js"></script>
   <script src="assets/nutrition.js"></script>
   <script src="assets/app.js"></script>
+  <script src="assets/screenshot.js"></script>
 </body>
 </html>

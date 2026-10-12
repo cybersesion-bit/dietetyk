@@ -92,4 +92,21 @@ th { color: var(--muted); font-weight: 600; }
 .meals .foods { margin: 6px 0 0; font-size: .92rem; }
 .meals li.training { border-color: var(--accent); background: var(--accent-soft); }
 
+.shot { margin: 20px 0; padding-top: 16px; border-top: 1px dashed var(--border); }
+.shot h3 { margin: 0 0 4px; font-size: 1.05rem; }
+.dropzone {
+  display: grid; place-items: center; text-align: center;
+  min-height: 110px; padding: 16px; cursor: pointer;
+  border: 2px dashed var(--border); border-radius: 10px;
+  color: var(--muted); transition: border-color .15s, background .15s;
+}
+.dropzone:hover, .dropzone.over { border-color: var(--accent); background: var(--accent-soft); }
+.shot-result { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 16px; margin-top: 12px; }
+.shot-result img { width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.shot-result .ocr-raw { grid-column: 1 / -1; font-size: .85rem; color: var(--muted); }
+.shot-result pre { white-space: pre-wrap; max-height: 200px; overflow: auto; background: var(--bg); padding: 8px; border-radius: 6px; }
+.form-actions { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+input.ocr-filled { border-color: var(--accent); background: var(--accent-soft); }
+@media (max-width: 640px) { .shot-result { grid-template-columns: 1fr; } }
+
 .site-footer { color: var(--muted); font-size: .8rem; padding-bottom: 32px; }

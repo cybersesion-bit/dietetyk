@@ -96,6 +96,18 @@
   $("#load-sample").addEventListener("click", () =>
     fetch("data/sample-workouts.csv").then(r => r.text()).then(t => load(t, "przykład")));
 
+  // Dopisanie pojedynczego treningu (np. ze zrzutu ekranu) do już wczytanych
+  function addWorkout(w) {
+    workouts.push(w);
+    workouts.sort((a, b) => a.date.localeCompare(b.date));
+    $("#import-status").textContent = `Dodano „${w.title}” (${fmtDate(w.date)}). Treningów: ${workouts.length}.`;
+    renderWorkouts();
+    renderPlan();
+    $("#day-select").value = w.date;
+    renderPlan();
+  }
+  window.App = { addWorkout };
+
   $("#day-select").addEventListener("change", renderPlan);
   $("#profile-form").addEventListener("input", () => { renderWorkouts(); renderPlan(); });
 })();
