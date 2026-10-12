@@ -6,6 +6,8 @@
     title:  ["Title", "Name", "Nazwa"],
     type:   ["WorkoutType", "Type", "Sport"],
     hours:  ["TimeTotalInHours", "Duration", "Hours"],
+    planned:["PlannedDuration"],
+    plannedTss: ["PlannedTSS", "TSSPlanned"],
     tss:    ["TSS"],
     ifac:   ["IF"],
     kj:     ["Energy", "EnergyKJ", "Work"],
@@ -68,13 +70,14 @@
       date: String(get(r, "date") || "").slice(0, 10),
       title: get(r, "title") || "Trening",
       type: get(r, "type") || "Other",
-      hours: hoursFrom(get(r, "hours")) || 0,
-      tss: num(get(r, "tss")),
+      // trening zrealizowany ma czas całkowity; zaplanowany – tylko czas planowany
+      hours: hoursFrom(get(r, "hours")) || hoursFrom(get(r, "planned")) || 0,
+      planned: !hoursFrom(get(r, "hours")),
+      tss: num(get(r, "tss")) ?? num(get(r, "plannedTss")),
       ifac: num(get(r, "ifac")),
       kj: num(get(r, "kj")),
       kcal: num(get(r, "kcal"))
     }))
-    // pomijamy treningi tylko zaplanowane (bez zrealizowanego czasu)
     .filter(w => w.date && w.hours > 0)
     .sort((a, b) => a.date.localeCompare(b.date));
   }

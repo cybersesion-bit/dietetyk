@@ -4,20 +4,20 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dieta pod trening</title>
-  <meta name="description" content="Plan żywienia dopasowany do treningów zarejestrowanych w TrainingPeaks.">
+  <meta name="description" content="Plan żywienia na 14 dni dopasowany do treningów z TrainingPeaks.">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
   <header class="site-header">
     <div class="wrap">
       <h1>Dieta pod trening</h1>
-      <p class="lead">Wgraj eksport treningów z TrainingPeaks, a dostaniesz dzienny plan kalorii, makroskładników i posiłków.</p>
+      <p class="lead">Wgraj zrzuty ekranu lub eksport z TrainingPeaks i dostań plan żywienia na najbliższe dwa tygodnie, dzień po dniu.</p>
     </div>
   </header>
 
   <main class="wrap">
-    <!-- KROK 1: profil zawodnika -->
-    <section class="card" id="profil">
+    <!-- KROK 1: profil -->
+    <section class="card no-print" id="profil">
       <h2><span class="step">1</span> Twój profil</h2>
       <form id="profile-form" class="grid">
         <label>Płeć
@@ -47,88 +47,63 @@
     </section>
 
     <!-- KROK 2: treningi -->
-    <section class="card" id="treningi">
-      <h2><span class="step">2</span> Treningi z TrainingPeaks</h2>
-      <p class="hint">W TrainingPeaks: <em>Settings → Export Data → Workout Summary</em> (CSV). Wgraj plik albo użyj danych przykładowych.</p>
+    <section class="card no-print" id="treningi">
+      <h2><span class="step">2</span> Treningi: zrealizowane i zaplanowane</h2>
+      <p class="hint">Najlepiej wgraj zrzut kalendarza TrainingPeaks z treningami zaplanowanymi na 2 tygodnie do przodu, oraz ostatni tydzień zrealizowanych treningów. Możesz wgrać kilka zrzutów naraz lub wkleić je Ctrl+V. Tekst jest rozpoznawany w Twojej przeglądarce, obrazy nigdzie nie są wysyłane.</p>
+
+      <label class="dropzone" id="shot-drop">
+        <input type="file" id="shot-input" accept="image/png,image/jpeg" multiple hidden>
+        <span><strong>Zrzuty ekranu PNG/JPG</strong><br>upuść tutaj, kliknij lub wklej Ctrl+V</span>
+      </label>
+
       <div class="actions">
-        <label class="btn">
-          Wgraj plik CSV
+        <label class="btn btn-ghost">
+          Eksport CSV z TP
           <input type="file" id="csv-input" accept=".csv,text/csv" hidden>
         </label>
+        <button type="button" class="btn btn-ghost" id="add-row">+ Dodaj trening ręcznie</button>
         <button type="button" class="btn btn-ghost" id="load-sample">Wczytaj przykład</button>
-        <button type="button" class="btn btn-ghost" id="connect-tp" disabled title="Wymaga partnerskiego dostępu do API TrainingPeaks">Połącz z TrainingPeaks (wkrótce)</button>
       </div>
       <p id="import-status" class="status" role="status"></p>
+      <div class="gallery" id="shot-gallery"></div>
 
-      <!-- Zrzut ekranu z TP -> OCR -> formularz do sprawdzenia -->
-      <div class="shot">
-        <h3>…albo zrzut ekranu treningu</h3>
-        <p class="hint">Zrób zrzut podsumowania jednego treningu w TrainingPeaks (czas, TSS, IF, kJ/kcal) i wgraj go jako PNG/JPG lub wklej ze schowka (Ctrl+V). Tekst jest rozpoznawany w Twojej przeglądarce, obraz nigdzie nie jest wysyłany.</p>
-        <label class="dropzone" id="shot-drop">
-          <input type="file" id="shot-input" accept="image/png,image/jpeg" hidden>
-          <span>Upuść tutaj obraz, kliknij, aby wybrać, lub wklej Ctrl+V</span>
-        </label>
-        <p id="shot-status" class="status" role="status"></p>
-
-        <div class="shot-result" id="shot-result" hidden>
-          <img id="shot-preview" alt="Podgląd wgranego zrzutu ekranu">
-          <form id="shot-form" class="grid">
-            <label>Data <input type="date" name="date" required></label>
-            <label>Nazwa <input type="text" name="title" value="Trening ze zrzutu"></label>
-            <label>Typ
-              <select name="type">
-                <option value="Bike">Rower</option>
-                <option value="Run">Bieg</option>
-                <option value="Swim">Pływanie</option>
-                <option value="Strength">Siła</option>
-                <option value="Other">Inne</option>
-              </select>
-            </label>
-            <label>Czas (h:mm:ss) <input type="text" name="duration" placeholder="1:30:00" pattern="\d{1,2}:\d{2}(:\d{2})?" required></label>
-            <label>TSS <input type="number" name="tss" step="0.1" min="0"></label>
-            <label>IF <input type="number" name="ifac" step="0.01" min="0" max="1.5"></label>
-            <label>Praca (kJ) <input type="number" name="kj" min="0"></label>
-            <label>Kalorie (kcal) <input type="number" name="kcal" min="0"></label>
-            <div class="form-actions">
-              <button type="submit" class="btn">Dodaj trening</button>
-              <button type="button" class="btn btn-ghost" id="shot-cancel">Anuluj</button>
-            </div>
-          </form>
-          <details class="ocr-raw"><summary>Rozpoznany tekst</summary><pre id="shot-text"></pre></details>
+      <div id="workouts-box" hidden>
+        <div class="table-head">
+          <h3>Twoje treningi</h3>
+          <button type="button" class="btn btn-small" id="mark-reviewed" hidden>Wszystko sprawdzone</button>
         </div>
-      </div>
-
-      <div class="table-scroll">
-        <table id="workouts-table" hidden>
-          <thead>
-            <tr><th>Data</th><th>Trening</th><th>Typ</th><th>Czas</th><th>TSS</th><th>kcal</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <p class="hint" id="review-hint" hidden>Wiersze podświetlone na żółto pochodzą ze zrzutów: sprawdź datę, czas i TSS. Czerwone wymagają uzupełnienia daty lub czasu.</p>
+        <div class="table-scroll">
+          <table id="workouts-table" class="edit-table">
+            <thead>
+              <tr><th>Data</th><th>Nazwa</th><th>Typ</th><th>Czas (h:mm)</th><th>TSS</th><th>IF</th><th>kJ</th><th>kcal</th><th>Źródło</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
-    <!-- KROK 3: plan diety -->
+    <!-- KROK 3: plan na 14 dni -->
     <section class="card" id="plan" hidden>
-      <h2><span class="step">3</span> Plan żywienia</h2>
-      <label class="day-picker">Dzień
-        <select id="day-select"></select>
-      </label>
-
-      <div class="summary" id="day-summary"></div>
-
-      <h3>Posiłki</h3>
-      <ol class="meals" id="meal-list"></ol>
-
-      <h3>Podsumowanie tygodnia</h3>
-      <div class="table-scroll">
-        <table id="week-table">
-          <thead>
-            <tr><th>Dzień</th><th>Obciążenie</th><th>kcal</th><th>Węgl. (g)</th><th>Białko (g)</th><th>Tłuszcz (g)</th></tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <h2><span class="step">3</span> Plan żywienia na 14 dni</h2>
+      <div class="plan-controls no-print">
+        <label>Początek planu <input type="date" id="start-date"></label>
+        <fieldset>
+          <legend>Dni bez treningu w danych</legend>
+          <label class="radio"><input type="radio" name="fill" value="rest" checked> traktuj jako odpoczynek</label>
+          <label class="radio"><input type="radio" name="fill" value="repeat"> powtórz ostatni tydzień</label>
+        </fieldset>
+        <div class="actions">
+          <button type="button" class="btn" id="print-plan">Drukuj / PDF</button>
+          <button type="button" class="btn btn-ghost" id="export-plan">Pobierz CSV</button>
+        </div>
       </div>
+      <p class="legend">
+        <span class="pill pill-proj">wzorzec</span> trening przewidziany na podstawie ostatniego tygodnia ·
+        <span class="pill pill-load">ładowanie</span> więcej węglowodanów przed długim treningiem
+      </p>
+      <div id="weeks"></div>
     </section>
   </main>
 

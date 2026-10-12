@@ -18,6 +18,9 @@
       { minHours: 2.5,  gPerHour: 60 },
       { minHours: 1.25, gPerHour: 30 }
     ],
+    // dzień przed długim treningiem (≥ 2,5 h) dokładamy węglowodanów
+    preloadIfNextDayHours: 2.5,
+    preloadExtraGPerKg: 1.5,
     // domyślne MET, gdy brak mocy (kJ) i kalorii
     defaultMet: { Bike: 8, Run: 10, Swim: 8, Strength: 5, Other: 6 }
   };
@@ -31,30 +34,35 @@
   function workoutKcal(w, weight) {
     if (w.kcal) return w.kcal;
     if (w.kj) return w.kj;                 // rower: ~1 kJ pracy ≈ 1 kcal wydatku
-    const met = w.ifac ? 4 + 8 * w.ifac    // intensywność z IF
-                       : (CONFIG.defaultMet[w.type] || CONFIG.defaultMet.Other);
+    // IF podany, albo wyliczony z TSS (TSS = h × IF² × 100) – typowe dla treningów planowanych
+    const ifac = w.ifac || (w.tss && w.hours ? Math.sqrt(w.tss / (100 * w.hours)) : null);
+    const met = ifac ? 4 + 8 * Math.min(ifac, 1.2)
+                     : (CONFIG.defaultMet[w.type] || CONFIG.defaultMet.Other);
     return met * weight * w.hours;
   }
 
   function carbBand(hours) {
-    return CONFIG.carbBands.find(b => hours <= b.maxHours);
+    const i = CONFIG.carbBands.findIndex(b => hours <= b.maxHours);
+    return { ...CONFIG.carbBands[i], level: i };
   }
 
-  function planDay(profile, workouts) {
+  // opts.nextDayHours – czas treningu następnego dnia (do ładowania węglowodanami)
+  function planDay(profile, workouts, opts = {}) {
     const hours = workouts.reduce((s, w) => s + w.hours, 0);
     const trainKcal = workouts.reduce((s, w) => s + workoutKcal(w, profile.weight), 0);
     const tss = workouts.reduce((s, w) => s + (w.tss || 0), 0);
     const band = carbBand(hours);
+    const preload = (opts.nextDayHours || 0) >= CONFIG.preloadIfNextDayHours;
 
     const target = (bmr(profile) * profile.neat + trainKcal) * CONFIG.goalFactor[profile.goal];
-    const carbs = band.gPerKg * profile.weight;
+    const carbs = (band.gPerKg + (preload ? CONFIG.preloadExtraGPerKg : 0)) * profile.weight;
     const protein = CONFIG.proteinGPerKg[profile.goal] * profile.weight;
     const fatFromRest = (target - carbs * 4 - protein * 4) / 9;
     const fat = Math.max(fatFromRest, CONFIG.minFatGPerKg * profile.weight);
     const kcal = carbs * 4 + protein * 4 + fat * 9;
 
     return {
-      hours, tss, trainKcal, band: band.label,
+      hours, tss, trainKcal, band: band.label, level: band.level, preload,
       kcal: Math.round(kcal), carbs: Math.round(carbs),
       protein: Math.round(protein), fat: Math.round(fat),
       meals: buildMeals({ carbs, protein, fat }, workouts)

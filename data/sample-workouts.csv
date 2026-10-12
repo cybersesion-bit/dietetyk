@@ -1,7 +1,17 @@
-Title,WorkoutType,WorkoutDay,TimeTotalInHours,TSS,IF,Energy
-Spokojne kręcenie Z2,Bike,2026-10-05,1.5,65,0.68,980
-Interwały 4x8 min,Bike,2026-10-06,1.25,95,0.86,1050
-Bieg tlenowy,Run,2026-10-07,0.75,45,0.75,
-Siłownia - nogi,Strength,2026-10-08,1.0,40,,
-Sweet spot 3x15,Bike,2026-10-09,1.75,120,0.84,1450
-Długa jazda,Bike,2026-10-11,4.0,210,0.72,2900
+Title,WorkoutType,WorkoutDay,TimeTotalInHours,PlannedDuration,TSS,PlannedTSS,IF,Energy
+Spokojne kręcenie Z2,Bike,2026-10-05,1.5,1.5,65,,0.68,980
+Interwały 4x8 min,Bike,2026-10-06,1.25,1.25,95,,0.86,1050
+Bieg tlenowy,Run,2026-10-07,0.75,0.75,45,,0.75,
+Siłownia - nogi,Strength,2026-10-08,1.0,1.0,40,,,
+Sweet spot 3x15,Bike,2026-10-09,1.75,1.75,120,,0.84,1450
+Długa jazda,Bike,2026-10-11,4.0,4.0,210,,0.72,2900
+Regeneracja,Bike,2026-10-13,,1.0,,35,,
+Interwały VO2max 5x4,Bike,2026-10-14,,1.5,,100,,
+Bieg tlenowy,Run,2026-10-15,,0.75,,45,,
+Tempo 2x20,Bike,2026-10-16,,1.75,,115,,
+Długa jazda z akcentami,Bike,2026-10-18,,4.5,,250,,
+Siłownia,Strength,2026-10-20,,1.0,,40,,
+Sweet spot 4x12,Bike,2026-10-21,,1.5,,105,,
+Bieg z przebieżkami,Run,2026-10-22,,1.0,,55,,
+Z2 + sprinty,Bike,2026-10-23,,2.0,,110,,
+Długa jazda,Bike,2026-10-25,,3.5,,190,,
