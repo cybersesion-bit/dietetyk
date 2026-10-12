@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dieta pod trening</title>
+  <meta name="description" content="Plan żywienia dopasowany do treningów zarejestrowanych w TrainingPeaks.">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>Dieta pod trening</h1>
+      <p class="lead">Wgraj eksport treningów z TrainingPeaks, a dostaniesz dzienny plan kalorii, makroskładników i posiłków.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- KROK 1: profil zawodnika -->
+    <section class="card" id="profil">
+      <h2><span class="step">1</span> Twój profil</h2>
+      <form id="profile-form" class="grid">
+        <label>Płeć
+          <select name="sex">
+            <option value="m">Mężczyzna</option>
+            <option value="k">Kobieta</option>
+          </select>
+        </label>
+        <label>Wiek <input type="number" name="age" min="14" max="99" value="35" required></label>
+        <label>Masa ciała (kg) <input type="number" name="weight" min="35" max="200" step="0.1" value="72" required></label>
+        <label>Wzrost (cm) <input type="number" name="height" min="130" max="230" value="178" required></label>
+        <label>Cel
+          <select name="goal">
+            <option value="maintain">Utrzymanie masy</option>
+            <option value="cut">Lekka redukcja (−10%)</option>
+            <option value="gain">Budowa masy (+10%)</option>
+          </select>
+        </label>
+        <label>Aktywność poza treningiem
+          <select name="neat">
+            <option value="1.3">Praca siedząca</option>
+            <option value="1.45" selected>Umiarkowanie aktywny</option>
+            <option value="1.6">Praca fizyczna</option>
+          </select>
+        </label>
+      </form>
+    </section>
+
+    <!-- KROK 2: treningi -->
+    <section class="card" id="treningi">
+      <h2><span class="step">2</span> Treningi z TrainingPeaks</h2>
+      <p class="hint">W TrainingPeaks: <em>Settings → Export Data → Workout Summary</em> (CSV). Wgraj plik albo użyj danych przykładowych.</p>
+      <div class="actions">
+        <label class="btn">
+          Wgraj plik CSV
+          <input type="file" id="csv-input" accept=".csv,text/csv" hidden>
+        </label>
+        <button type="button" class="btn btn-ghost" id="load-sample">Wczytaj przykład</button>
+        <button type="button" class="btn btn-ghost" id="connect-tp" disabled title="Wymaga partnerskiego dostępu do API TrainingPeaks">Połącz z TrainingPeaks (wkrótce)</button>
+      </div>
+      <p id="import-status" class="status" role="status"></p>
+      <div class="table-scroll">
+        <table id="workouts-table" hidden>
+          <thead>
+            <tr><th>Data</th><th>Trening</th><th>Typ</th><th>Czas</th><th>TSS</th><th>kcal</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- KROK 3: plan diety -->
+    <section class="card" id="plan" hidden>
+      <h2><span class="step">3</span> Plan żywienia</h2>
+      <label class="day-picker">Dzień
+        <select id="day-select"></select>
+      </label>
+
+      <div class="summary" id="day-summary"></div>
+
+      <h3>Posiłki</h3>
+      <ol class="meals" id="meal-list"></ol>
+
+      <h3>Podsumowanie tygodnia</h3>
+      <div class="table-scroll">
+        <table id="week-table">
+          <thead>
+            <tr><th>Dzień</th><th>Obciążenie</th><th>kcal</th><th>Węgl. (g)</th><th>Białko (g)</th><th>Tłuszcz (g)</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p>Wyliczenia to szacunki oparte na ogólnych wytycznych żywienia w sporcie wytrzymałościowym, nie porada medyczna. Przy chorobach, ciąży lub zaburzeniach odżywiania skonsultuj plan z dietetykiem.</p>
+    <p>Projekt niezależny, niepowiązany z TrainingPeaks.</p>
+  </footer>
+
+  <script src="assets/csv.js"></script>
+  <script src="assets/nutrition.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
